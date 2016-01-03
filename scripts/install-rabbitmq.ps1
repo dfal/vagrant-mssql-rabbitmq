@@ -16,23 +16,25 @@ function Get-RabbitMqPath {
 $downloadPath = Download-File("https://www.rabbitmq.com/releases/rabbitmq-server/v$version/$fileName")
 
 echo "Installing RabbitMQ"
-
-#$process = Start-Process $downloadPath -ArgumentList "/S" -PassThru
-#$process.WaitForExit()
-
+$process = Start-Process $downloadPath "/S" -PassThru
+$process.WaitForExit()
+if ($process.ExitCode -ne 0) { throw "RabbitMQ installation failed, error: $process.ExitCode"}
 echo "DONE!"
 
 
 $rabbitMqPath = Get-RabbitMqPath
-Start-Process "$rabbitMqPath\sbin\rabbitmq-service.bat" -ArgumentList "stop" -Wait
-Start-Process "$rabbitMqPath\sbin\rabbitmq-plugins.bat" -ArgumentList "enable rabbitmq_management --offline" -Wait
-Start-Process "$rabbitMqPath\sbin\rabbitmq-service.bat" -ArgumentList "start" -Wait
-Start-Sleep -s 15
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "stop"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "enable rabbitmq_management --offline"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-plugins.bat" "enable rabbitmq_management"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "install"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "start"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "start_app"
+
 echo ""
 echo "RabbitMQ Management Plugin enabled at http://localhost:15672"
 echo ""
 
-Start-Process "$rabbitMqPath\sbin\rabbitmqctl.bat" -ArgumentList "add_user $user $password" -Wait
-Start-Process "$rabbitMqPath\sbin\rabbitmqctl.bat" -ArgumentList "set_user_tags $user administrator" -Wait
-Start-Process "$rabbitMqPath\sbin\rabbitmqctl.bat" -ArgumentList "set_permissions -p / $user "".*"" "".*"" "".*"" " -Wait
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "add_user $user $password"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "set_user_tags $user administrator"
+Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "set_permissions -p / $user "".*"" "".*"" "".*"""
 echo "RabbitMQ user: $user password: $password"
