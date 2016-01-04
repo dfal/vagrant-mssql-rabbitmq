@@ -11,11 +11,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "192.168.50.4"
   config.vm.network :forwarded_port, guest: 3389, host: 3389
 
-  #config.vm.provision :shell, path: "scripts/install-dot-net.ps1"
+  config.vm.provision :shell, path: "scripts/install-dot-net.ps1"
   config.vm.provision :shell, path: "scripts/disable_firewall.cmd"
-  #config.vm.provision :shell, path: "scripts/install-sql-server.ps1"
-  #config.vm.provision :shell, path: "scripts/configure-sql-port.ps1"
+  config.vm.provision :shell, path: "scripts/download-sql-server.ps1"
+  config.vm.provision :shell, path: "scripts/install-sql-server.cmd"
+  config.vm.provision :shell, path: "scripts/configure-sql-port.ps1"
   config.vm.provision :shell, path: "scripts/enable-rdp.ps1"
-  #config.vm.provision :shell, path: "scripts/install-erlang.ps1"
-  #config.vm.provision :shell, path: "scripts/install-rabbitmq.ps1"
+  config.vm.provision :shell, path: "scripts/install-erlang.ps1"
+  config.vm.provision :shell, path: "scripts/install-rabbitmq.ps1"
 end
