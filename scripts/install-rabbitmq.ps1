@@ -18,7 +18,7 @@ $downloadPath = Download-File("https://www.rabbitmq.com/releases/rabbitmq-server
 echo "Installing RabbitMQ"
 $process = Start-Process $downloadPath "/S" -PassThru
 $process.WaitForExit()
-if ($process.ExitCode -ne 0) { throw "RabbitMQ installation failed, error: $process.ExitCode"}
+if ($process.ExitCode -ne 0) { throw "RabbitMQ installation failed, error: " + $process.ExitCode }
 echo "DONE!"
 
 
