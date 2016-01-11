@@ -1,0 +1,19 @@
+{
+	"databases": [
+		{
+			"name": "tf_platform",
+			"mdf": "C:\\vagrant\\DB\\tf_platform",
+			"ldf": "C:\\vagrant\\DB\\tf_platform_log"
+		},
+		{
+			"name": "tf_cluster",
+			"mdf": "C:\\vagrant\\DB\\tf_cluster",
+			"ldf": "C:\\vagrant\\DB\\tf_cluster_log"
+		},
+		{
+			"name": "tf_tenant",
+			"mdf": "C:\\vagrant\\DB\\tf_tenant",
+			"ldf": "C:\\vagrant\\DB\\tf_tenant_log"
+		}
+	]
+}

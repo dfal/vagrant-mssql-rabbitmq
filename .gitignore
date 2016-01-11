@@ -1,3 +1,6 @@
 *.exe
 .vagrant
 downloads
+
+DB/*.mdf
+DB/*.ldf
