@@ -13,28 +13,31 @@ function Get-RabbitMqPath {
     return "$path\rabbitmq_server-$version"
 }
 
-$downloadPath = Download-File("https://www.rabbitmq.com/releases/rabbitmq-server/v$version/$fileName")
+$installerPath = Download-File("https://www.rabbitmq.com/releases/rabbitmq-server/v$version/$fileName")
 
 echo "Installing RabbitMQ"
-$process = Start-Process $downloadPath "/S" -PassThru
-$process.WaitForExit()
-if ($process.ExitCode -ne 0) { throw "RabbitMQ installation failed, error: " + $process.ExitCode }
+
+& $installerPath /S | Out-Null
+
 echo "DONE!"
 
-
 $rabbitMqPath = Get-RabbitMqPath
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "stop"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "enable rabbitmq_management --offline"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-plugins.bat" "enable rabbitmq_management"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "install"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmq-service.bat" "start"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "start_app"
+Set-Location "$rabbitMqPath\sbin"
+
+& "cmd.exe" /c "rabbitmq-service.bat" stop
+& "cmd.exe" /c "rabbitmq-service.bat" enable rabbitmq_management --offline
+& "cmd.exe" /c "rabbitmq-plugins.bat" enable rabbitmq_management
+& "cmd.exe" /c "rabbitmq-service.bat" install
+& "cmd.exe" /c "rabbitmq-service.bat" start
+& "cmd.exe" /c "rabbitmqctl.bat" start_app
+& "cmd.exe" /c "rabbitmqctl.bat" status
+
+& "cmd.exe" /c "rabbitmqctl.bat" add_user $user $password
+& "cmd.exe" /c "rabbitmqctl.bat" set_user_tags $user administrator
+& "cmd.exe" /c "rabbitmqctl.bat" set_permissions -p / $user ".*" ".*" ".*"
 
 echo ""
 echo "RabbitMQ Management Plugin enabled at http://localhost:15672"
 echo ""
 
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "add_user $user $password"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "set_user_tags $user administrator"
-Start-Process -Wait "$rabbitMqPath\sbin\rabbitmqctl.bat" "set_permissions -p / $user "".*"" "".*"" "".*"""
 echo "RabbitMQ user: $user password: $password"
