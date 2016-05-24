@@ -1,4 +1,10 @@
 {
+	"logins": [
+		{
+			"name": "tf_tenant",
+			"password": "Tenant123"
+		}
+	],
 	"databases": [
 		{
 			"name": "tf_platform",
@@ -8,12 +14,24 @@
 		{
 			"name": "tf_cluster",
 			"mdf": "C:\\vagrant\\DB\\tf_cluster",
-			"ldf": "C:\\vagrant\\DB\\tf_cluster_log"
+			"ldf": "C:\\vagrant\\DB\\tf_cluster_log",
+			"users": [
+				{
+					"userName": "tf_tenant",
+					"loginName": "tf_tenant"
+				}
+			]
 		},
 		{
 			"name": "tf_tenant",
 			"mdf": "C:\\vagrant\\DB\\tf_tenant",
-			"ldf": "C:\\vagrant\\DB\\tf_tenant_log"
+			"ldf": "C:\\vagrant\\DB\\tf_tenant_log",
+			"users": [
+				{
+					"userName": "tf_tenant",
+					"loginName": "tf_tenant"
+				}
+			]
 		}
 	]
 }
